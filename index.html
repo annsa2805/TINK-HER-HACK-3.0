@@ -11,9 +11,9 @@
         <h1>👗 Wardrobe Genie</h1>
 
         <!-- Upload Outfit Section -->
-        <input type="file" id="uploadImage" accept="image/*">
-        <button onclick="uploadOutfit()">Upload Outfit</button>
-        
+        <input type="file" id="uploadImage" accept="image/*" multiple>
+        <button onclick="uploadOutfits()">Upload Outfits</button>
+
         <!-- Preferences Section -->
         <div class="preferences">
             <label>Weather:</label>
@@ -44,6 +44,6 @@
         <div id="suggestedOutfit"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

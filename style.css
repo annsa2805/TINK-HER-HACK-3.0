@@ -1,42 +1,42 @@
 body {
+    background-image: url('https://source.unsplash.com/1600x900/?fashion,clothing');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     font-family: Arial, sans-serif;
+    color: white;
     text-align: center;
-    background-color: #f8f1ff;
 }
 
 .container {
-    width: 50%;
+    max-width: 600px;
     margin: auto;
+    background: rgba(0, 0, 0, 0.6);
     padding: 20px;
-    background: white;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    color: #8b5cf6;
+.preferences {
+    margin-top: 10px;
 }
 
-input, select, button {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-button {
-    background-color: #8b5cf6;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #6d28d9;
-}
-
-#suggestedOutfit img {
+#suggestedOutfit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
     margin-top: 20px;
-    width: 200px;
+}
+
+.outfit-img {
+    width: 150px;
+    height: auto;
     border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.outfit-img:hover {
+    transform: scale(1.1);
 }

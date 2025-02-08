@@ -1,53 +1,55 @@
-let outfits = [];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js";
 
-function uploadOutfit() {
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyAcbEpLUebQj0rQJjYw2WhYSvvOUgMqii0",
+    authDomain: "wardrobe-genie-39bdb.firebaseapp.com",
+    projectId: "wardrobe-genie-39bdb",
+    storageBucket: "wardrobe-genie-39bdb.firebasestorage.app",
+    messagingSenderId: "205233556785",
+    appId: "1:205233556785:web:f45ff6719dc589076e3410",
+    measurementId: "G-W4EQT04790"
+  };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+
+window.uploadOutfits = async function() {
     let input = document.getElementById("uploadImage");
-    if (input.files.length === 0) {
-        alert("Please select an image!");
+    let files = input.files;
+
+    if (files.length === 0) {
+        alert("Please select images to upload!");
         return;
     }
 
-    let file = input.files[0];
-    let reader = new FileReader();
+    for (let file of files) {
+        let storageRef = ref(storage, `outfits/${file.name}`);
+        await uploadBytes(storageRef, file);
+    }
     
-    reader.onload = function (event) {
-        let outfitData = {
-            image: event.target.result,
-            lastWorn: new Date().getTime() - (Math.random() * 7 * 24 * 60 * 60 * 1000), // Random past date
-            color: document.getElementById("color").value
-        };
+    alert("Images uploaded successfully!");
+    loadOutfits(); // Refresh outfit gallery
+};
 
-        outfits.push(outfitData);
-        alert("Outfit uploaded successfully!");
-    };
+// Load outfits dynamically from Firebase Storage
+async function loadOutfits() {
+    let outfitGallery = document.getElementById("suggestedOutfit");
+    outfitGallery.innerHTML = ""; // Clear previous images
 
-    reader.readAsDataURL(file);
+    let storageRef = ref(storage, "outfits/");
+    let outfitList = await listAll(storageRef);
+
+    for (let item of outfitList.items) {
+        let url = await getDownloadURL(item);
+        let img = document.createElement("img");
+        img.src = url;
+        img.classList.add("outfit-img");
+        outfitGallery.appendChild(img);
+    }
 }
 
-function suggestOutfit() {
-    if (outfits.length === 0) {
-        alert("No outfits uploaded yet!");
-        return;
-    }
-
-    let weather = document.getElementById("weather").value;
-    let profession = document.getElementById("profession").value;
-    let colorPreference = document.getElementById("color").value;
-
-    // Filter outfits based on color preference & sort by least worn
-    let filteredOutfits = outfits
-        .filter(outfit => outfit.color === colorPreference)
-        .sort((a, b) => a.lastWorn - b.lastWorn);
-
-    if (filteredOutfits.length === 0) {
-        alert("No matching outfits found!");
-        return;
-    }
-
-    let suggestedOutfit = filteredOutfits[0]; // Least worn outfit
-    document.getElementById("suggestedOutfit").innerHTML = `<h3>Suggested Outfit:</h3>
-        <img src="${suggestedOutfit.image}" alt="Suggested Outfit">`;
-    
-    // Update last worn date
-    suggestedOutfit.lastWorn = new Date().getTime();
-}
+// Load outfits when page loads
+window.onload = loadOutfits;
